@@ -10,10 +10,14 @@ const taskRoutes = require("./routes/task.routes");
 
 const app = express();
 
-// Middlewares - Isko aise hi rehne de, bas origin check kar le
+// Middlewares - Backend deploy hone ke baad yahan frontend ka Render URL bhi add kar dena
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      process.env.FRONTEND_URL,
+    ],
     credentials: true,
   }),
 );
@@ -29,8 +33,12 @@ const start = async () => {
   try {
     await connectDB();
     await sequelize.sync({ alter: true });
+
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`🚀 Server: http://localhost:${PORT}`));
+    // '0.0.0.0' zaroori hai Render connectivity ke liye
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 Server is LIVE on port: ${PORT}`);
+    });
   } catch (error) {
     console.error("❌ Startup Error:", error);
   }
