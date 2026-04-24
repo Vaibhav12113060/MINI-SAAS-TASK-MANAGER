@@ -24,6 +24,10 @@ app.use(
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "VaibFlow API is live and kicking! 🚀" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
